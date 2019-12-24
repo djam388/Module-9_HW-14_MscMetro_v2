@@ -1,5 +1,6 @@
 package utils;
 
+import com.google.gson.annotations.Expose;
 import model.Line;
 import model.Station;
 
@@ -40,6 +41,16 @@ public class StationIndex
             connectedStations.addAll(stations.stream()
                     .filter(s -> !s.equals(station)).collect(Collectors.toList()));
         }
+    }
+
+    public Map<Double, Line> getLines()
+    {
+        return number2line;
+    }
+
+    public TreeMap<Station, TreeSet<Station>> getConnections()
+    {
+        return connections;
     }
 
     public Line getLine(double number)

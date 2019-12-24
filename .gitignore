@@ -1,4 +1,4 @@
 /.idea
 *.iml
-data/*
-!data/.gitkeep
+src/main/java/data/*
+!src/main/java/data/.gitkeep
