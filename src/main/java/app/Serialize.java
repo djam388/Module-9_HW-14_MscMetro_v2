@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import utils.StationIndex;
+import utils.TextNumberToDouble;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -100,6 +101,7 @@ public class Serialize
     {
         Double lineNumberInDouble = 0.0;
         Document doc = Jsoup.parse(htmlString);
+        TextNumberToDouble convertToDouble = new TextNumberToDouble();
         for (int tbl = 3; tbl < 6; tbl++) {
             Element table = doc.select("tbody").get(tbl);
             Elements rows = table.select("tr");
@@ -134,7 +136,7 @@ public class Serialize
                 { // если одна линия
                     if (colLineDetails.get(0).text().substring(0, 1).equals("0")) // проверяем есть ли "0" перед номером линии
                     { // если есть, убираем "0"
-                        lineNumberInDouble = convertLineNumberToDouble(colLineDetails.get(0).text().substring(1, (colLineDetails.get(0).text().length() - 2)));
+                        lineNumberInDouble = convertToDouble.getInDouble(colLineDetails.get(0).text().substring(1, (colLineDetails.get(0).text().length() - 2)));
                         stationInfo = lineNumberInDouble.toString()
                                 + ", "
                                 + colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1);
@@ -162,7 +164,7 @@ public class Serialize
 
                     } else {//используем номер линии без корректировки
 
-                        lineNumberInDouble = convertLineNumberToDouble(colLineDetails.get(0).text().substring(0, (colLineDetails.get(0).text().length() - 2)));
+                        lineNumberInDouble = convertToDouble.getInDouble(colLineDetails.get(0).text().substring(0, (colLineDetails.get(0).text().length() - 2)));
                         stationInfo = lineNumberInDouble
                                 + ", "
                                 + colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1);
@@ -190,13 +192,13 @@ public class Serialize
                     }
                 } else { // если станция относится к двум линия, то разбиваем поле с двумя значениями на отдельные фрагменты
                     String[] fragments = colLineDetails.get(0).text().split(" ");
-                    stationInfo = convertLineNumberToDouble(fragments[0]) + ", " + colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1);
+                    stationInfo = convertToDouble.getInDouble(fragments[0]) + ", " + colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1);
                     listStationsFlat.add(stationInfo);
                     if (connectionFound)
                     {
                         connectionsFlat.putAll(addConnectedStationsFlat(stationInfo, connectedStations));
                     }
-                    stationInfo = convertLineNumberToDouble(fragments[1].substring(0, 2)) + ", " + colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1);
+                    stationInfo = convertToDouble.getInDouble(fragments[1].substring(0, 2)) + ", " + colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1);
                     listStationsFlat.add(stationInfo);
                     if (connectionFound)
                     {
@@ -296,21 +298,5 @@ public class Serialize
             }
         }
         return null;
-    }
-
-    private static double convertLineNumberToDouble (String lineNumber)
-    {
-        Pattern pattern = Pattern.compile("\\D+", Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(lineNumber);
-        boolean letterFound = (matcher.find());
-
-        if (!letterFound)
-        {
-            return Double.parseDouble(lineNumber);
-        }
-        else
-        {
-            return Double.parseDouble(lineNumber.substring(0, lineNumber.indexOf(matcher.group(0)))) + 0.5;
-        }
     }
 }

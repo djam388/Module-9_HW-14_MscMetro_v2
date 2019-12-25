@@ -43,6 +43,11 @@ public class StationIndex
         }
     }
 
+    public TreeSet<Station> getStations()
+    {
+        return stations;
+    }
+
     public Map<Double, Line> getLines()
     {
         return number2line;
