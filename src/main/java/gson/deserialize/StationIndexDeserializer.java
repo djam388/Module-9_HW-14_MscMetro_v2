@@ -39,7 +39,6 @@ public class StationIndexDeserializer implements JsonDeserializer<StationIndex> 
             {
                 JsonObject object = elementEntry.getValue().getAsJsonObject();
                 Set<Map.Entry<String, JsonElement>> entrySet = object.entrySet();
-                Line lineToEdit;
                 for (Map.Entry<String,JsonElement> entry : entrySet)
                 {
                     entry.getValue().getAsJsonArray().forEach(station ->
