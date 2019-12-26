@@ -213,7 +213,6 @@ public class Serialize
             String[] fragments = station.split(", ");
             linesToEdit = lines.get(Double.parseDouble(fragments[0]));
             linesToEdit.addStation(new Station(fragments[1], lines.get(Double.parseDouble(fragments[0]))));
-
         }
     }
 
@@ -226,13 +225,7 @@ public class Serialize
 
             if (station.attr("title").length() > 0) {
                 addedConnectedStation.add(station.attr("title"));
-                //System.out.println(stationInfo + ": " + station.attr("title"));
-                //System.out.println(colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1)
-                //        + ": "
-                //        + station.attr("title"));
             }
-            //connectionsFlat.put(colLineDetails.get(1).select("a").attr("title").substring(0, foundIndex - 1),
-            //    connectedStation);
         }
         addedConnectionsFlat.put(stationInfo, addedConnectedStation);
         return addedConnectionsFlat;
